@@ -1,15 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import TaskDecomposition from '@/components/TaskDecomposition'
+import Error from '@/components/Error'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/task-decomposition',
+      name: 'TaskDecomposition',
+      component: TaskDecomposition
+    },
+    {
+      path: '*',
+      component: Error
     }
   ]
 })
