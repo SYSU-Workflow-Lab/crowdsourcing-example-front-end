@@ -15,7 +15,12 @@
         <div class="mydiv">
           <div v-for="(item, index) in items">
             <h2>Subtask {{index+1}}: </h2>
-            <el-input class="myinput" type="textarea" v-model="item.data"></el-input>
+            <p>
+              <el-input class="myinput" type="textarea" v-model="item.data"></el-input>
+            </p>
+            <p style="height:40px;">
+              <el-button type="danger" icon="el-icon-delete" circle style="float: right; margin-right:5%" @click="deleteTask(index)"></el-button>
+            </p>
           </div>
           <div style="margin-top:30px;">
               <el-button @click="addTask">Add Task</el-button>
@@ -28,6 +33,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'TaskDecomposition',
   data () {
@@ -51,6 +57,9 @@ export default {
     save() {
       console.log(JSON.stringify(this.items));
       localStorage.setItem('items', JSON.stringify(this.items));
+    },
+    deleteTask(index) {
+      this.items = this.items.filter(o => this.items.indexOf(o) != index);
     }
   },
   mounted: function() {
