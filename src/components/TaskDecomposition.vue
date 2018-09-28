@@ -10,7 +10,7 @@
         </div>
         <div class="mydiv">
           <h2>Task: </h2>
-          <p class="myp">{{tasks}}</p>
+          <p class="myp">{{task}}</p>
         </div>
         <div class="mydiv">
           <div v-for="(item, index) in items">
@@ -38,8 +38,8 @@ export default {
   name: 'TaskDecomposition',
   data () {
     return {
-      tips: ' tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips tips ',
-      tasks: ' tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks tasks ',
+      tips: '',
+      task: '',
       items:[{
         data:''
       },
@@ -63,8 +63,17 @@ export default {
     }
   },
   mounted: function() {
+    axios.get('http://localhost:48403/task-decomposition/tips-and-task')
+    .then(response => {
+      this.tips = response.data[0];
+      this.task = response.data[1];
+    })
+    .catch(error => {
+      console.log(error);
+      alert('网络错误，不能访问');
+    })
     var items = JSON.parse(localStorage.getItem('items'));
-    console.log(items)
+    // console.log(items)
     if (items != null) {
       this.items = items;
     }
