@@ -25,7 +25,7 @@
           <div style="margin-top:30px;">
               <el-button @click="addTask">Add Task</el-button>
               <el-button type="primary" @click="save">Save</el-button>
-              <el-button type="success">Submit</el-button>
+              <el-button type="success" @click="submit">Submit</el-button>
             </div>
         </div>
       </el-main>
@@ -60,6 +60,41 @@ export default {
     },
     deleteTask(index) {
       this.items = this.items.filter(o => this.items.indexOf(o) != index);
+    },
+    submit() {
+      var workId = '';
+      this.$prompt('please enter your workId', 'Notice', {
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel'
+      }).then(({ value }) => {
+          workId = value;
+          var formData = {
+            userId: workId,
+            data: this.items
+          }
+          axios.post('http://localhost:48403/task-decomposition/submit', formData)
+          .then(response => {
+            this.items = [{
+              data:''
+            },
+            {
+              data:''
+            }];
+            localStorage.removeItem('items')
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          this.$message({
+            type: 'success',
+            message: 'submit successfully!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'cancel submissions.'
+          });       
+        });
     }
   },
   mounted: function() {
