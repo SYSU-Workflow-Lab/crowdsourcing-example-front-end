@@ -55,47 +55,77 @@ export default {
       // console.log(this.items)
     },
     save() {
-      console.log(JSON.stringify(this.items));
-      localStorage.setItem('items', JSON.stringify(this.items));
+      if (!this.isNull()) {
+        // console.log(JSON.stringify(this.items));
+        localStorage.setItem('items', JSON.stringify(this.items));
+        this.$message({
+          type: 'success',
+          message: 'save successfully!'
+        });
+      } else {
+        this.$message.error('must no empty subtask!');
+      }
     },
     deleteTask(index) {
       this.items = this.items.filter(o => this.items.indexOf(o) != index);
     },
     submit() {
-      var workId = '';
-      this.$prompt('please enter your workId', 'Notice', {
-        confirmButtonText: 'Submit',
-        cancelButtonText: 'Cancel'
-      }).then(({ value }) => {
-          workId = value;
-          var formData = {
-            userId: workId,
-            data: this.items
-          }
-          axios.post('http://localhost:48403/task-decomposition/submit', formData)
-          .then(response => {
-            this.items = [{
-              data:''
-            },
-            {
-              data:''
-            }];
-            localStorage.removeItem('items')
-          })
-          .catch(error => {
-            console.log(error);
-          })
-          this.$message({
-            type: 'success',
-            message: 'submit successfully!'
+      if (!this.isNull()) {
+        var workId = '';
+        this.$prompt('please enter your workId', 'Notice', {
+          confirmButtonText: 'Submit',
+          cancelButtonText: 'Cancel',
+          inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+          inputErrorMessage: 'please enter your work id'
+        }).then(({ value }) => {
+            workId = value;
+            var formData = {
+              userId: workId,
+              data: this.items
+            }
+            axios.post('http://localhost:48403/task-decomposition/submit', formData)
+            .then(response => {
+              this.items = [{
+                data:''
+              },
+              {
+                data:''
+              }];
+              localStorage.removeItem('items')
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            this.$message({
+              type: 'success',
+              message: 'submit successfully!'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'warning',
+              message: 'cancel submissions.'
+            });
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: 'cancel submissions.'
-          });       
-        });
-    }
+        } else {
+          this.$message.error('must no empty subtask!');
+        }
+      },
+      isNull() {
+        var regu = "^[ ]+$";
+        var re = new RegExp(regu);
+        var flag = true;
+        for (var i = 0; i < this.items.length; i++) {
+          var str = this.items[i].data;
+          if ( str == "" ) {
+            return true;
+          }
+          flag = re.test(str);
+          if (flag) {
+            break;
+          }
+        }
+        return flag;
+      }
   },
   mounted: function() {
     axios.get('http://localhost:48403/task-decomposition/tips-and-task')
