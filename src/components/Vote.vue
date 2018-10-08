@@ -67,14 +67,18 @@ export default {
             axios.post('http://localhost:48403/vote/submit', formData)
             .then(response => {
               // this.finished = true;
+              this.$message({
+                type: 'success',
+                message: 'submit successfully!'
+              });
             })
             .catch(error => {
               console.log(error);
+              this.$message({
+                type: 'warning',
+                message: 'Network error, cannot access!'
+              });
             })
-            this.$message({
-              type: 'success',
-              message: 'submit successfully!'
-            });
           }).catch(() => {
             this.$message({
               type: 'warning',
@@ -103,7 +107,10 @@ export default {
     })
     .catch(error => {
       console.log(error);
-      alert('网络错误，不能访问');
+      this.$message({
+        type: 'warning',
+        message: 'Network error, cannot access!'
+      });
     })
     
   }

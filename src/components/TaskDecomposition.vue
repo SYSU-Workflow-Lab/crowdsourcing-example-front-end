@@ -92,14 +92,18 @@ export default {
                 data:''
               }];
               localStorage.removeItem('items')
+              this.$message({
+                type: 'success',
+                message: 'submit successfully!'
+              });
             })
             .catch(error => {
+              this.$message({
+                type: 'warning',
+                message: 'Network error, cannot access!'
+              });
               console.log(error);
             })
-            this.$message({
-              type: 'success',
-              message: 'submit successfully!'
-            });
           }).catch(() => {
             this.$message({
               type: 'warning',
@@ -135,7 +139,10 @@ export default {
     })
     .catch(error => {
       console.log(error);
-      alert('网络错误，不能访问');
+      this.$message({
+        type: 'warning',
+        message: 'Network error, cannot access!'
+      });
     })
     var items = JSON.parse(localStorage.getItem('items'));
     // console.log(items)
