@@ -65,17 +65,15 @@ export default {
             workId = value;
             var formData = {
               userId: workId,
-              data: this.items
+              data: {
+                content: this.solution,
+                index: this.$route.params.index,
+              }
             }
-            axios.post('http://localhost:48403/api/task-decomposition/submit', formData)
+            axios.post('http://localhost:48403/api/task-completion/submit', formData)
             .then(response => {
-              this.items = [{
-                data:''
-              },
-              {
-                data:''
-              }];
-              localStorage.removeItem('items')
+              this.solution = '';
+              localStorage.removeItem('solution');
               this.$message({
                 type: 'success',
                 message: 'submit successfully!'
