@@ -1,7 +1,7 @@
 <template>
   <el-container>
       <el-header style="height:80px;padding:0px">
-        <h1>Vote The Best {{$route.params.purpose}}</h1>
+        <h1>Task Mergence</h1>
       </el-header>
       <el-main>
         <div class="mydiv">
@@ -12,48 +12,58 @@
           <h2>Task: </h2>
           <p class="myp">{{task}}</p>
         </div>
-        <div v-for="(item, index) in items" class="mydiv">
-          <h2 style="font-weight:bold;font-size:30px">Choice {{index+1}}</h2>
-          <div v-for="(i, subindex) in item.data">
+        <div class="mydiv">
+          <!-- <h2>Your Task: </h2>
+          <p v-for="(item, index) in yourtask" class="myp">{{item}}</p> -->
+          <h2 style="font-weight:bold;font-size:30px">Best Task</h2>
+          <div v-for="(i, subindex) in yourtask">
             <hr style="width:90%">
-            <h2 v-if="isMulti">{{$route.params.purpose}} {{subindex+1}}: </h2>
+            <h2>SubTask {{subindex+1}}: </h2>
             <p>
               <p class="myoutput">{{i}}</p>
             </p>
           </div>
         </div>
-        <div style="margin-top:30px;">
-          <el-select v-model="result" placeholder="请选择">
-            <el-option v-for="(item, index) in items" :key="item.userId" :label="index+1" :value="item.userId"></el-option>
-          </el-select>
-          <el-button type="success" @click="submit" :disabled="finished">Submit</el-button>
+        <div class="mydiv">
+          <p>
+            <el-input class="myinput" type="textarea" v-model="solution"></el-input>
+          </p>
+          <div style="margin-top:30px;">
+              <el-button type="primary" @click="save">Save</el-button>
+              <el-button type="success" @click="submit">Submit</el-button>
+            </div>
         </div>
       </el-main>
-      
     </el-container>
 </template>
 
 <script>
 import axios from 'axios';
 export default {
-  name: 'Vote',
+  name: 'TaskMergence',
   data () {
     return {
-      stage: '',
       tips: '',
       task: '',
-      index: '',
-      items:[],
-      result: '',
-      isMulti: true,
-      finished: false,
+      yourtask: [],
+      solution:'',
     }
   },
   methods: {
+    save() {
+      if (!this.isNull()) {
+        localStorage.setItem('solution', JSON.stringify(this.solution));
+        this.$message({
+          type: 'success',
+          message: 'save successfully!'
+        });
+      } else {
+        this.$message.error('must no empty subtask!');
+      }
+    },
     submit() {
       if (!this.isNull()) {
         var workId = '';
-        console.log(this.result);
         this.$prompt('please enter your workId', 'Notice', {
           confirmButtonText: 'Submit',
           cancelButtonText: 'Cancel',
@@ -63,22 +73,26 @@ export default {
             workId = value;
             var formData = {
               userId: workId,
-              data: this.result
+              data: {
+                content: this.solution,
+                index: this.$route.params.index,
+              }
             }
-            axios.post('http://localhost:48403/api/vote/submit/' + this.index, formData)
+            axios.post('http://localhost:48403/api/task-completion/submit', formData)
             .then(response => {
-              // this.finished = true;
+              this.solution = '';
+              localStorage.removeItem('solution');
               this.$message({
                 type: 'success',
                 message: 'submit successfully!'
               });
             })
             .catch(error => {
-              console.log(error);
               this.$message({
                 type: 'warning',
                 message: 'Network error, cannot access!'
               });
+              console.log(error);
             })
           }).catch(() => {
             this.$message({
@@ -86,33 +100,27 @@ export default {
               message: 'cancel submissions.'
             });
           });
+        } else {
+          this.$message.error('must no empty subtask!');
         }
       },
       isNull() {
-        return this.result.replace(/(^s*)|(s*$)/g, "").length == 0;
+        var regu = "^[ ]+$";
+        var re = new RegExp(regu);
+        var str = this.solution;
+        if ( str == "" ) {
+          return true;
+        }
+        return re.test(str);
       }
   },
   mounted: function() {
-    this.index = this.$route.params.index;
-    switch (this.$route.params.purpose) {
-      case 'Subtask':
-        this.stage = 'vtd';
-        this.isMulti = true;
-        this.index = '0';
-        break;
-      case 'CompletedTask':
-        this.isMulti = false;
-        this.stage = 'vtc';
-        break;
-    }
-    axios.get('http://localhost:48403/api/vote/' + this.stage + '/tips-and-task')
+    axios.get('http://localhost:48403/api/task-mergence/tips-and-task/')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];
-      axios.get('http://localhost:48403/api/vote/' + this.stage + '/data/' + this.index)
-        .then(response => {
-          this.items = response.data;
-        })
+      this.yourtask = response.data;
+      this.yourtask.splice(0, 2);
     })
     .catch(error => {
       console.log(error);
@@ -121,7 +129,10 @@ export default {
         message: 'Network error, cannot access!'
       });
     })
-    
+    var solution = JSON.parse(localStorage.getItem('solution'));
+    if (solution != null) {
+      this.solution = solution;
+    }
   }
 }
 </script>
@@ -147,6 +158,10 @@ h2 {
   width: 90%;
   text-align: start;
   margin: 0 auto;
+}
+.myinput {
+  width: 90%;
+  font-size:20px;
 }
 .myoutput {
   width: 90%;
