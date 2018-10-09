@@ -20,7 +20,7 @@ export default new Router({
       component: TaskCompletion
     },
     {
-      path: '/vote/:purpose',
+      path: '/vote/:purpose/:index',
       name: 'Vote',
       component: Vote
     },

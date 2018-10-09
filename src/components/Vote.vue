@@ -16,7 +16,7 @@
           <h2 style="font-weight:bold;font-size:30px">Choice {{index+1}}</h2>
           <div v-for="(i, subindex) in item.data">
             <hr style="width:90%">
-            <h2>Subtask {{subindex+1}}: </h2>
+            <h2 v-if="isMulti">{{$route.params.purpose}} {{subindex+1}}: </h2>
             <p>
               <p class="myoutput">{{i}}</p>
             </p>
@@ -24,8 +24,7 @@
         </div>
         <div style="margin-top:30px;">
           <el-select v-model="result" placeholder="请选择">
-            <el-option v-for="(item, index) in items" :key="item.userId" :label="index+1" :value="item.userId">
-            </el-option>
+            <el-option v-for="(item, index) in items" :key="item.userId" :label="index+1" :value="item.userId"></el-option>
           </el-select>
           <el-button type="success" @click="submit" :disabled="finished">Submit</el-button>
         </div>
@@ -43,8 +42,10 @@ export default {
       stage: '',
       tips: '',
       task: '',
+      index: '',
       items:[],
       result: '',
+      isMulti: true,
       finished: false,
     }
   },
@@ -92,15 +93,22 @@ export default {
       }
   },
   mounted: function() {
+    this.index = this.$route.params.index;
     switch (this.$route.params.purpose) {
-      case 'Subtasks':
+      case 'Subtask':
         this.stage = 'vtd';
+        this.isMulti = true;
+        break;
+      case 'CompletedTask':
+        this.isMulti = false;
+        this.stage = 'vtc';
+        break;
     }
     axios.get('http://localhost:48403/api/vote/' + this.stage + '/tips-and-task')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];
-      axios.get('http://localhost:48403/api/vote/' + this.stage + '/data')
+      axios.get('http://localhost:48403/api/vote/' + this.stage + '/data/' + this.index)
         .then(response => {
           this.items = response.data;
         })
