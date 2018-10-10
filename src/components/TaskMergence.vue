@@ -18,7 +18,7 @@
             <hr style="width:90%">
             <h2>SubTask {{subindex+1}}: </h2>
             <p>
-              <p class="myoutput">{{i}}</p>
+              <pre class="myoutput">{{i}}</pre>
             </p>
           </div>
         </div>
@@ -165,5 +165,6 @@ h2 {
   font-size:20px;
   text-align: start;
   margin: 0 auto;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 </style>

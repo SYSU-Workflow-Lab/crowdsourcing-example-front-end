@@ -16,7 +16,7 @@ export default new Router({
       component: TaskDecomposition
     },
     {
-      path: '/task-completion/:index',
+      path: '/task-completion/:index(\\d+)',
       name: 'TaskCompletion',
       component: TaskCompletion
     },
@@ -26,9 +26,13 @@ export default new Router({
       component: TaskMergence
     },
     {
-      path: '/vote/:purpose/:index',
+      path: '/vote/:purpose/:index(\\d+)',
       name: 'Vote',
       component: Vote
+    },
+    {
+      path: '/vote/:purpose/',
+      redirect: '/vote/:purpose/0'
     },
     {
       path: '*',

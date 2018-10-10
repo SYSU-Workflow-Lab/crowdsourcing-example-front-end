@@ -18,7 +18,7 @@
             <hr style="width:90%">
             <h2 v-if="isMulti">{{$route.params.purpose}} {{subindex+1}}: </h2>
             <p>
-              <p class="myoutput">{{i}}</p>
+              <pre class="myoutput">{{i}}</pre>
             </p>
           </div>
         </div>
@@ -104,6 +104,11 @@ export default {
         this.isMulti = false;
         this.stage = 'vtc';
         break;
+      case 'MergedTask':
+        this.isMulti = false;
+        this.stage = 'vtm';
+        this.index = '0';
+        break;
     }
     axios.get('http://localhost:48403/api/vote/' + this.stage + '/tips-and-task')
     .then(response => {
@@ -147,11 +152,13 @@ h2 {
   width: 90%;
   text-align: start;
   margin: 0 auto;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 .myoutput {
   width: 90%;
   font-size:20px;
   text-align: start;
   margin: 0 auto;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 </style>

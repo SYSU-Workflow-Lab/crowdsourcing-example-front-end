@@ -14,7 +14,7 @@
         </div>
         <div class="mydiv">
           <h2>Your Task: </h2>
-          <p class="myp">{{yourtask}}</p>
+          <pre class="myp" style="">{{yourtask}}</pre>
         </div>
         <div class="mydiv">
           <p>
@@ -149,6 +149,7 @@ h2 {
   width: 90%;
   text-align: start;
   margin: 0 auto;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 .myinput {
   width: 90%;
