@@ -13,8 +13,6 @@
           <p class="myp">{{task}}</p>
         </div>
         <div class="mydiv">
-          <!-- <h2>Your Task: </h2>
-          <p v-for="(item, index) in yourtask" class="myp">{{item}}</p> -->
           <h2 style="font-weight:bold;font-size:30px">Best Task</h2>
           <div v-for="(i, subindex) in yourtask">
             <hr style="width:90%">
@@ -52,7 +50,7 @@ export default {
   methods: {
     save() {
       if (!this.isNull()) {
-        localStorage.setItem('solution', JSON.stringify(this.solution));
+        localStorage.setItem('solution', this.solution);
         this.$message({
           type: 'success',
           message: 'save successfully!'
@@ -75,10 +73,9 @@ export default {
               userId: workId,
               data: {
                 content: this.solution,
-                index: this.$route.params.index,
               }
             }
-            axios.post('http://localhost:48403/api/task-completion/submit', formData)
+            axios.post('http://localhost:48403/api/task-mergence/submit', formData)
             .then(response => {
               this.solution = '';
               localStorage.removeItem('solution');
@@ -129,7 +126,7 @@ export default {
         message: 'Network error, cannot access!'
       });
     })
-    var solution = JSON.parse(localStorage.getItem('solution'));
+    var solution = localStorage.getItem('solution');
     if (solution != null) {
       this.solution = solution;
     }
