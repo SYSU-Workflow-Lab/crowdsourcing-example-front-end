@@ -12,7 +12,7 @@
           <h2>Task: </h2>
           <p class="myp">{{task}}</p>
         </div>
-        <div class="mydiv">
+        <div v-if="isComplicated" class="mydiv">
           <h2 style="font-weight:bold;font-size:30px">Best Task</h2>
           <div v-for="(i, subindex) in yourtask">
             <hr style="width:90%">
@@ -45,6 +45,7 @@ export default {
       task: '',
       yourtask: [],
       solution:'',
+      isComplicated: false,
     }
   },
   methods: {
@@ -116,8 +117,13 @@ export default {
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];
-      this.yourtask = response.data;
-      this.yourtask.splice(0, 2);
+      if (response.data[2] == 'Complicated') {
+        this.yourtask = response.data;
+        this.yourtask.splice(0, 3);
+        this.isComplicated = true;
+      } else {
+        this.isComplicated = false;
+      }
     })
     .catch(error => {
       console.log(error);

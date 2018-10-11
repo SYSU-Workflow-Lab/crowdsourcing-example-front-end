@@ -23,7 +23,10 @@
           </div>
         </div>
         <div style="margin-top:30px;">
-          <el-select v-model="result" placeholder="请选择">
+          <el-select v-if="isVT" v-model="result" placeholder="Is task simple or complicated?" style="width:400px">
+            <el-option v-for="item in VTSelect" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+          <el-select v-else v-model="result" placeholder="Please choose one">
             <el-option v-for="(item, index) in items" :key="item.userId" :label="index+1" :value="item.userId"></el-option>
           </el-select>
           <el-button type="success" @click="submit" :disabled="finished">Submit</el-button>
@@ -46,7 +49,9 @@ export default {
       items:[],
       result: '',
       isMulti: true,
+      isVT: false,
       finished: false,
+      VTSelect: ["Simple", "Complicated"],
     }
   },
   methods: {
@@ -65,7 +70,7 @@ export default {
               userId: workId,
               data: this.result
             }
-            axios.post('http://localhost:48403/api/vote/submit/' + this.index, formData)
+            axios.post('http://localhost:48403/api/vote/submit/' + this.stage + '/' + this.index, formData)
             .then(response => {
               // this.finished = true;
               this.$message({
@@ -93,21 +98,30 @@ export default {
       }
   },
   mounted: function() {
-    this.index = this.$route.params.index;
     switch (this.$route.params.purpose) {
+      case 'Task':
+        this.stage = 'vt';
+        this.isMulti = false;
+        this.index = 0;
+        this.isVT = true;
+        break;
       case 'Subtask':
         this.stage = 'vtd';
         this.isMulti = true;
         this.index = '0';
+        this.isVT = false;
         break;
       case 'CompletedTask':
         this.isMulti = false;
         this.stage = 'vtc';
+        this.index = this.$route.params.index;
+        this.isVT = false;
         break;
       case 'MergedTask':
         this.isMulti = false;
         this.stage = 'vtm';
         this.index = '0';
+        this.isVT = false;
         break;
     }
     axios.get('http://localhost:48403/api/vote/' + this.stage + '/tips-and-task')
