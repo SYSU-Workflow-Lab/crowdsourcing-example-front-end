@@ -12,6 +12,13 @@
             <p class="myp">
               <el-button type="danger" @click="deleteAll">Delete All</el-button>
             </p>
+            <p class="myp">
+              <el-cascader expand-trigger="hover" :options="tipsAndTasks" v-model="selectedOptions" @change="handleChange"></el-cascader>
+              <el-button type="primary" @click="update" style="margin-left:20px">Update</el-button>
+            </p>
+            <p class="myp">
+              <el-input v-model="updateInput" type="textarea" placeholder="Input the content" :rows="5"></el-input>
+            </p>
           </div>
           <div class="mydiv">
             <h2 style="font-weight:bold;font-size:30px">
@@ -71,21 +78,35 @@ export default {
   data () {
     return {
       isLogin: false,
-      task: '',
+      task: 'No Data',
       subTask: {
-        userId: "",
+        userId: "No Data",
         data: []
       },
       mergedTask: {
-        userId: "",
+        userId: "No Data",
         data: []
       },
       completedTask: [
           {
-          userId: "",
+          userId: "No Data",
           data: []
         }
-      ]
+      ],
+      tipsAndTasks: [
+        {
+          value: '',
+          label: '',
+          children: [
+            {
+              value: '',
+              label: '',
+            }
+          ],
+        }
+      ],
+      selectedOptions: [],
+      updateInput: '',
     }
   },
   methods: {
@@ -97,11 +118,114 @@ export default {
       }
     },
     deleteAll() {
-      axios.get('http://localhost:48403/api/management/reset')
+      this.$prompt('please enter password', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        inputPattern: /workflow/,
+        inputErrorMessage: 'please enter your password'
+      }).then(({ value }) => {
+        axios.get('http://localhost:48403/api/management/reset')
+          .then(response => {
+            this.task = 'No Data';
+            this.subTask = {
+              userId: "No Data",
+              data: []
+            };
+            this.mergedTask = {
+              userId: "No Data",
+              data: []
+            };
+            this.completedTask =  [
+                {
+                userId: "No Data",
+                data: []
+              }
+            ];
+          })
+          .catch(error => {
+            this.$message({
+              type: 'warning',
+              message: 'Network error, cannot access!'
+            });
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'warning',
+            message: 'cancel.'
+          });
+        });
+    },
+    update() {
+      if (this.selectedOptions.length != 0) {
+        this.$confirm('Confirm to update?', 'Notice', {
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+          type: 'info'
+        }).then(() => {
+          var formData = {
+              stage: this.selectedOptions[0],
+              type: this.selectedOptions[1],
+              content: this.updateInput,
+            }
+          axios.post('http://localhost:48403/api/management/update/tips-and-tasks', formData)
+            .then(response => {
+              this.$message({
+                type: 'success',
+                message: 'Update successfully!'
+              });
+              this.updateTipsAndTasksData();
+            })
+            .catch(error => {
+              this.$message({
+                type: 'warning',
+                message: 'Network error, cannot access!'
+              });
+              console.log(error);
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'cancel update'
+          });
+        });
+      }
+    },
+    handleChange() {
+      for (var i = 0, len = this.tipsAndTasks.length; i < len; i++) {
+        if (this.tipsAndTasks[i]['value'] == this.selectedOptions[0]) {
+          for (var j = 0, sublen = this.tipsAndTasks[i]['children'].length; j < sublen; j++) {
+            if (this.tipsAndTasks[i]['children'][j]['value'] == this.selectedOptions[1]) {
+              this.updateInput = this.tipsAndTasks[i]['children'][j]['content'];
+            }
+          }
+        }
+      }
+    },
+    updateTipsAndTasksData() {
+      axios.get('http://localhost:48403/api/management/tips-and-tasks')
       .then(response => {
-        
+        this.tipsAndTasks = []
+        for (var i = 0; i < response.data.length; i += 2) {
+          this.tipsAndTasks.push({
+            value: response.data[i]['stage'],
+            label: 'stage of ' + response.data[i]['stage'],
+            children: [
+              {
+                value: response.data[i]['type'],
+                label: response.data[i]['type'] == '0' ? 'Tips' : 'Tasks',
+                content: response.data[i]['content'],
+              },
+              {
+                value: response.data[i + 1]['type'],
+                label: response.data[i + 1]['type'] == '0' ? 'Tips' : 'Tasks',
+                content: response.data[i + 1]['content'],
+              }
+            ]
+          })
+        }
       })
       .catch(error => {
+        console.log(error)
         this.$message({
           type: 'warning',
           message: 'Network error, cannot access!'
@@ -142,6 +266,7 @@ export default {
           message: 'Network error, cannot access!'
         });
       })
+      this.updateTipsAndTasksData();
     }
   }
 }
@@ -149,32 +274,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1 {
-  font-weight: bold;
-  font-size: 35px;
-}
-h2 {
-  font-weight: normal;
-  text-align: start;
-  margin-left: 5%;
-}
-.mydiv {
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #c9c6c6;
-  border-radius: 10px;
-}
+@import '../assets/common.css';
 .myp {
-  width: 90%;
-  text-align: start;
-  margin: 0 auto;
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-}
-.myoutput {
-  width: 90%;
-  font-size:20px;
-  text-align: start;
-  margin: 0 auto;
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  margin-top: 20px;
 }
 </style>

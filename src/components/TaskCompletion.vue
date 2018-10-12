@@ -130,29 +130,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1 {
-  font-weight: bold;
-  font-size: 35px;
-}
-h2 {
-  font-weight: normal;
-  text-align: start;
-  margin-left: 5%;
-}
-.mydiv {
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #c9c6c6;
-  border-radius: 10px;
-}
-.myp {
-  width: 90%;
-  text-align: start;
-  margin: 0 auto;
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-}
-.myinput {
-  width: 90%;
-  font-size:20px;
-}
+@import '../assets/common.css';
 </style>
