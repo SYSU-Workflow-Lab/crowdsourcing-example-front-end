@@ -4,6 +4,7 @@ import TaskDecomposition from '@/components/TaskDecomposition'
 import TaskCompletion from '@/components/TaskCompletion'
 import TaskMergence from '@/components/TaskMergence'
 import Vote from '@/components/Vote'
+import Management from '@/components/Management'
 import Error from '@/components/Error'
 
 Vue.use(Router)
@@ -33,6 +34,11 @@ export default new Router({
     {
       path: '/vote/:purpose/',
       redirect: '/vote/:purpose/0'
+    },
+    {
+      path: '/management',
+      name: 'Management',
+      component: Management
     },
     {
       path: '*',
