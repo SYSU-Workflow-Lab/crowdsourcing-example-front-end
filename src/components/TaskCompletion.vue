@@ -18,7 +18,7 @@
         </div>
         <div class="mydiv">
           <p>
-            <el-input class="myinput" type="textarea" v-model="solution"></el-input>
+            <el-input class="myinput" type="textarea" v-model="solution" :rows="5"></el-input>
           </p>
           <div style="margin-top:30px;">
               <el-button type="primary" @click="save">Save</el-button>
@@ -42,7 +42,7 @@ export default {
     }
   },
   methods: {
-    save() {
+    save() { // 保存数据到LocalStorage中
       if (!this.isNull()) {
         localStorage.setItem('solution', JSON.stringify(this.solution));
         this.$message({

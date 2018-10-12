@@ -110,19 +110,18 @@ export default {
     }
   },
   methods: {
-    checkLogin() {
+    checkLogin() { // 检查是否登录
       if (!getCookie('session')) {
         this.isLogin = false;
       } else {
         this.isLogin = true;
       }
     },
-    deleteAll() {
-      this.$prompt('please enter password', 'Warning', {
+    deleteAll() { // 删除所有数据（除Tips和Tasks）
+      this.$confirm('Confirm to delete?', 'Warning', {
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
-        inputPattern: /workflow/,
-        inputErrorMessage: 'please enter your password'
+        type: 'warning'
       }).then(({ value }) => {
         axios.get('http://localhost:48403/api/management/reset')
           .then(response => {
@@ -155,7 +154,7 @@ export default {
           });
         });
     },
-    update() {
+    update() { // 更新Tips或Tasks数据
       if (this.selectedOptions.length != 0) {
         this.$confirm('Confirm to update?', 'Notice', {
           confirmButtonText: 'Confirm',
@@ -190,7 +189,7 @@ export default {
         });
       }
     },
-    handleChange() {
+    handleChange() { // 监听级联选择器事件
       for (var i = 0, len = this.tipsAndTasks.length; i < len; i++) {
         if (this.tipsAndTasks[i]['value'] == this.selectedOptions[0]) {
           for (var j = 0, sublen = this.tipsAndTasks[i]['children'].length; j < sublen; j++) {
@@ -201,7 +200,7 @@ export default {
         }
       }
     },
-    updateTipsAndTasksData() {
+    updateTipsAndTasksData() { // 更新Tips和Tasks数据
       axios.get('http://localhost:48403/api/management/tips-and-tasks')
       .then(response => {
         this.tipsAndTasks = []

@@ -16,7 +16,7 @@
           <div v-for="(item, index) in items">
             <h2>Subtask {{index+1}}: </h2>
             <p>
-              <el-input class="myinput" type="textarea" v-model="item.data"></el-input>
+              <el-input class="myinput" type="textarea" v-model="item.data" :rows="5"></el-input>
             </p>
             <p style="height:40px;">
               <el-button type="danger" icon="el-icon-delete" circle style="float: right; margin-right:5%" @click="deleteTask(index)"></el-button>
@@ -54,7 +54,7 @@ export default {
       this.items.push({data:''})
       // console.log(this.items)
     },
-    save() {
+    save() { // 保存数据到LocalStorage中
       if (!this.isNull()) {
         // console.log(JSON.stringify(this.items));
         localStorage.setItem('items', JSON.stringify(this.items));
