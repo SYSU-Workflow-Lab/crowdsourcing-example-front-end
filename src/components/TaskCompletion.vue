@@ -31,6 +31,7 @@
 
 <script>
 import axios from 'axios';
+const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'TaskCompletion',
   data () {
@@ -70,7 +71,7 @@ export default {
                 index: this.$route.params.index,
               }
             }
-            axios.post('http://localhost:48403/api/task-completion/submit', formData)
+            axios.post('http://' + HOST_NAME + '/api/task-completion/submit', formData)
             .then(response => {
               this.solution = '';
               localStorage.removeItem('solution');
@@ -107,7 +108,7 @@ export default {
       }
   },
   mounted: function() {
-    axios.get('http://localhost:48403/api/task-completion/tips-and-task/' + this.$route.params.index)
+    axios.get('http://' + HOST_NAME + '/api/task-completion/tips-and-task/' + this.$route.params.index)
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];

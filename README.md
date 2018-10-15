@@ -1,6 +1,21 @@
 # crowdsourcing-example-front-end
 
-> crowdsourcing example front end
+## URL
+> 管理页面 http://222.200.180.59:8888/#/management
+>
+> 选举是否为困难任务（vt） http://222.200.180.59:8888/#/vote/Task
+>
+> 任务分解（td） http://222.200.180.59:8888/#/task-decomposition
+>
+> 对任务分解的结果投票（vtd） http://222.200.180.59:8888/#/vote/Subtask
+>
+> 完成子任务（tc） http://222.200.180.59:8888/#/task-completion/{index}
+>
+> 对完成的子任务投票（vtc） http://222.200.180.59:8888/#/vote/CompletedTask/{index}
+>
+> 合并完成的子任务（tm） http://222.200.180.59:8888/#/task-mergence
+>
+> 对合并子任务的最终结果投票（vtm） http://222.200.180.59:8888/#/vote/MergedTask/
 
 ## Build Setup
 

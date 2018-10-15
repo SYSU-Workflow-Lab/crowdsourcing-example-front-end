@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios';
+const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'TaskDecomposition',
   data () {
@@ -83,7 +84,7 @@ export default {
               userId: workId,
               data: this.items
             }
-            axios.post('http://localhost:48403/api/task-decomposition/submit', formData)
+            axios.post('http://' + HOST_NAME + '/api/task-decomposition/submit', formData)
             .then(response => {
               this.items = [{
                 data:''
@@ -132,7 +133,7 @@ export default {
       }
   },
   mounted: function() {
-    axios.get('http://localhost:48403/api/task-decomposition/tips-and-task')
+    axios.get('http://' + HOST_NAME + '/api/task-decomposition/tips-and-task')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];

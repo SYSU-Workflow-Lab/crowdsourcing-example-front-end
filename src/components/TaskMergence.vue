@@ -37,6 +37,7 @@
 
 <script>
 import axios from 'axios';
+const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'TaskMergence',
   data () {
@@ -76,7 +77,7 @@ export default {
                 content: this.solution,
               }
             }
-            axios.post('http://localhost:48403/api/task-mergence/submit', formData)
+            axios.post('http://' + HOST_NAME + '/api/task-mergence/submit', formData)
             .then(response => {
               this.solution = '';
               localStorage.removeItem('solution');
@@ -113,7 +114,7 @@ export default {
       }
   },
   mounted: function() {
-    axios.get('http://localhost:48403/api/task-mergence/tips-and-task/')
+    axios.get('http://' + HOST_NAME + '/api/task-mergence/tips-and-task/')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];

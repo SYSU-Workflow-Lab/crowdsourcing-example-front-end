@@ -72,7 +72,8 @@
 
 <script>
 import axios from 'axios';
-import {getCookie, setCookie} from '../util/cookieUtils'
+import {getCookie, setCookie} from '../util/cookieUtils';
+const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'Vote',
   data () {
@@ -123,7 +124,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(({ value }) => {
-        axios.get('http://localhost:48403/api/management/reset')
+        axios.get(`http://${HOST_NAME}/api/management/reset`)
           .then(response => {
             this.task = 'No Data';
             this.subTask = {
@@ -166,7 +167,7 @@ export default {
               type: this.selectedOptions[1],
               content: this.updateInput,
             }
-          axios.post('http://localhost:48403/api/management/update/tips-and-tasks', formData)
+          axios.post(`http://${HOST_NAME}/api/management/update/tips-and-tasks`, formData)
             .then(response => {
               this.$message({
                 type: 'success',
@@ -201,7 +202,7 @@ export default {
       }
     },
     updateTipsAndTasksData() { // 更新Tips和Tasks数据
-      axios.get('http://localhost:48403/api/management/tips-and-tasks')
+      axios.get(`http://${HOST_NAME}/api/management/tips-and-tasks`)
       .then(response => {
         this.tipsAndTasks = []
         for (var i = 0; i < response.data.length; i += 2) {
@@ -250,8 +251,23 @@ export default {
               message: 'cancel submissions.'
             });
           });
+          axios.get(`http://${HOST_NAME}/api/management/data`)
+          .then(response => {
+            this.task = response.data['task'][0]['data'][0];
+            this.subTask = response.data['subtask'][0];
+            this.mergedTask = response.data['mergedtask'][0];
+            this.completedTask = response.data['completedtask']
+          })
+          .catch(error => {
+            console.log(error)
+            this.$message({
+              type: 'warning',
+              message: 'Network error, cannot access!'
+            });
+          })
+          this.updateTipsAndTasksData();
     } else {
-      axios.get('http://localhost:48403/api/management/data')
+      axios.get(`http://${HOST_NAME}/api/management/data`)
       .then(response => {
         this.task = response.data['task'][0]['data'][0];
         this.subTask = response.data['subtask'][0];

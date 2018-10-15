@@ -38,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'Vote',
   data () {
@@ -70,7 +71,7 @@ export default {
               userId: workId,
               data: this.result
             }
-            axios.post('http://localhost:48403/api/vote/submit/' + this.stage + '/' + this.index, formData)
+            axios.post('http://' + HOST_NAME + '/api/vote/submit/' + this.stage + '/' + this.index, formData)
             .then(response => {
               // this.finished = true;
               this.$message({
@@ -124,11 +125,11 @@ export default {
         this.isVT = false;
         break;
     }
-    axios.get('http://localhost:48403/api/vote/' + this.stage + '/tips-and-task')
+    axios.get('http://' + HOST_NAME + '/api/vote/' + this.stage + '/tips-and-task')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];
-      axios.get('http://localhost:48403/api/vote/' + this.stage + '/data/' + this.index)
+      axios.get('http://' + HOST_NAME + '/api/vote/' + this.stage + '/data/' + this.index)
         .then(response => {
           this.items = response.data;
         })
