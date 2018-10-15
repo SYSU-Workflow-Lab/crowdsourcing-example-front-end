@@ -13,7 +13,7 @@
               <el-button type="danger" @click="deleteAll">Delete All</el-button>
             </p>
             <p class="myp">
-              <el-cascader expand-trigger="hover" :options="tipsAndTasks" v-model="selectedOptions" @change="handleChange"></el-cascader>
+              <el-cascader expand-trigger="hover" :options="tipsAndTasks" v-model="selectedOptions" @change="handleChange" placeholder="Please choose one"></el-cascader>
               <el-button type="primary" @click="update" style="margin-left:20px">Update</el-button>
             </p>
             <p class="myp">
@@ -30,7 +30,7 @@
           </div>
           <div class="mydiv">
             <h2 style="font-weight:bold;font-size:30px">
-              Best Task Decomposition:
+              Best Task Decomposition:(Total participants: {{counts[0]}})
             </h2>
             <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{subTask['userId']}}</h3>
             <div v-for="(i, subindex) in subTask['data']">
@@ -43,7 +43,7 @@
           </div>
           <div class="mydiv">
             <h2 style="font-weight:bold;font-size:30px">
-              Best Task Completion:
+              Best Task Completion:(Total participants: {{counts[1]}})
             </h2>
             <div v-for="(i, subindex) in completedTask">
               <hr style="width:90%">
@@ -56,7 +56,7 @@
           </div>
           <div class="mydiv">
             <h2 style="font-weight:bold;font-size:30px">
-              Best Task Mergence:
+              Best Task Mergence:(Total participants: {{counts[2]}})
             </h2>
             <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{mergedTask['userId']}}</h3>
             <hr style="width:90%">
@@ -108,6 +108,7 @@ export default {
       ],
       selectedOptions: [],
       updateInput: '',
+      counts: [],
     }
   },
   methods: {
@@ -155,6 +156,36 @@ export default {
           });
         });
     },
+    getData() {
+      axios.get('http://' + HOST_NAME + '/api/management/data')
+      .then(response => {
+        this.task = response.data['task'][0]['data'][0];
+        this.subTask = response.data['subtask'][0];
+        this.mergedTask = response.data['mergedtask'][0];
+        this.completedTask = response.data['completedtask']
+      })
+      .catch(error => {
+        console.log(error)
+        this.$message({
+          type: 'warning',
+          message: 'Network error, cannot access!'
+        });
+      });
+
+      axios.get('http://' + HOST_NAME + '/api/management/counts')
+      .then(response => {
+        this.counts = response.data;
+      })
+      .catch(error => {
+        console.log(error)
+        this.$message({
+          type: 'warning',
+          message: 'Network error, cannot access!'
+        });
+      });
+
+      this.updateTipsAndTasksData();
+    },
     update() { // 更新Tips或Tasks数据
       if (this.selectedOptions.length != 0) {
         this.$confirm('Confirm to update?', 'Notice', {
@@ -167,7 +198,7 @@ export default {
               type: this.selectedOptions[1],
               content: this.updateInput,
             }
-          axios.post(`http://${HOST_NAME}/api/management/update/tips-and-tasks`, formData)
+          axios.post('http://' + HOST_NAME + '/api/management/update/tips-and-tasks', formData)
             .then(response => {
               this.$message({
                 type: 'success',
@@ -202,7 +233,7 @@ export default {
       }
     },
     updateTipsAndTasksData() { // 更新Tips和Tasks数据
-      axios.get(`http://${HOST_NAME}/api/management/tips-and-tasks`)
+      axios.get('http://' + HOST_NAME + '/api/management/tips-and-tasks')
       .then(response => {
         this.tipsAndTasks = []
         for (var i = 0; i < response.data.length; i += 2) {
@@ -233,7 +264,7 @@ export default {
       })
     }
   },
-  mounted: function() {
+  created: function() {
     this.checkLogin();
     if (!this.isLogin) {
         this.$prompt('please enter password', 'Login', {
@@ -251,38 +282,8 @@ export default {
               message: 'cancel submissions.'
             });
           });
-          axios.get(`http://${HOST_NAME}/api/management/data`)
-          .then(response => {
-            this.task = response.data['task'][0]['data'][0];
-            this.subTask = response.data['subtask'][0];
-            this.mergedTask = response.data['mergedtask'][0];
-            this.completedTask = response.data['completedtask']
-          })
-          .catch(error => {
-            console.log(error)
-            this.$message({
-              type: 'warning',
-              message: 'Network error, cannot access!'
-            });
-          })
-          this.updateTipsAndTasksData();
-    } else {
-      axios.get(`http://${HOST_NAME}/api/management/data`)
-      .then(response => {
-        this.task = response.data['task'][0]['data'][0];
-        this.subTask = response.data['subtask'][0];
-        this.mergedTask = response.data['mergedtask'][0];
-        this.completedTask = response.data['completedtask']
-      })
-      .catch(error => {
-        console.log(error)
-        this.$message({
-          type: 'warning',
-          message: 'Network error, cannot access!'
-        });
-      })
-      this.updateTipsAndTasksData();
     }
+    this.getData();
   }
 }
 </script>

@@ -12,8 +12,8 @@
           <h2>Task: </h2>
           <p class="myp">{{task}}</p>
         </div>
-        <div v-if="isComplicated" class="mydiv">
-          <h2 style="font-weight:bold;font-size:30px">Best Task</h2>
+        <div v-if="isComplex" class="mydiv">
+          <h2 style="font-weight:bold;font-size:30px">Tasks</h2>
           <div v-for="(i, subindex) in yourtask">
             <hr style="width:90%">
             <h2>SubTask {{subindex+1}}: </h2>
@@ -46,7 +46,7 @@ export default {
       task: '',
       yourtask: [],
       solution:'',
-      isComplicated: false,
+      isComplex: false,
     }
   },
   methods: {
@@ -113,17 +113,17 @@ export default {
         return re.test(str);
       }
   },
-  mounted: function() {
+  created: function() {
     axios.get('http://' + HOST_NAME + '/api/task-mergence/tips-and-task/')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];
-      if (response.data[2] == 'Complicated') {
+      if (response.data[2] == 'Complex') {
         this.yourtask = response.data;
         this.yourtask.splice(0, 3);
-        this.isComplicated = true;
+        this.isComplex = true;
       } else {
-        this.isComplicated = false;
+        this.isComplex = false;
       }
     })
     .catch(error => {

@@ -107,7 +107,7 @@ export default {
         return re.test(str);
       }
   },
-  mounted: function() {
+  created: function() {
     axios.get('http://' + HOST_NAME + '/api/task-completion/tips-and-task/' + this.$route.params.index)
     .then(response => {
       this.tips = response.data[0];

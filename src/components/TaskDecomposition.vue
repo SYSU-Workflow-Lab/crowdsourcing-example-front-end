@@ -132,7 +132,7 @@ export default {
         return flag;
       }
   },
-  mounted: function() {
+  created: function() {
     axios.get('http://' + HOST_NAME + '/api/task-decomposition/tips-and-task')
     .then(response => {
       this.tips = response.data[0];

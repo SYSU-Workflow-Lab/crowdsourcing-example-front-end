@@ -13,7 +13,7 @@
           <p class="myp">{{task}}</p>
         </div>
         <div v-for="(item, index) in items" class="mydiv">
-          <h2 style="font-weight:bold;font-size:30px">Choice {{index+1}}</h2>
+          <h2 style="font-weight:bold;font-size:30px">Candidate {{index+1}}</h2>
           <div v-for="(i, subindex) in item.data">
             <hr style="width:90%">
             <h2 v-if="isMulti">{{$route.params.purpose}} {{subindex+1}}: </h2>
@@ -23,7 +23,7 @@
           </div>
         </div>
         <div style="margin-top:30px;">
-          <el-select v-if="isVT" v-model="result" placeholder="Is task simple or complicated?" style="width:400px">
+          <el-select v-if="isVT" v-model="result" placeholder="Is task simple or complex?" style="width:400px">
             <el-option v-for="item in VTSelect" :key="item" :label="item" :value="item"></el-option>
           </el-select>
           <el-select v-else v-model="result" placeholder="Please choose one">
@@ -52,7 +52,7 @@ export default {
       isMulti: true,
       isVT: false,
       finished: false,
-      VTSelect: ["Simple", "Complicated"],
+      VTSelect: ["Simple", "Complex"],
     }
   },
   methods: {
@@ -98,7 +98,7 @@ export default {
         return this.result.replace(/(^s*)|(s*$)/g, "").length == 0;
       }
   },
-  mounted: function() {
+  created: function() {
     switch (this.$route.params.purpose) {
       case 'Task':
         this.stage = 'vt';
