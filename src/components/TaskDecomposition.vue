@@ -6,11 +6,11 @@
       <el-main>
         <div class="mydiv">
           <h2>Tips: </h2>
-          <p class="myp">{{tips}}</p>
+          <pre class="myp">{{tips}}</pre>
         </div>
         <div class="mydiv">
           <h2>Task: </h2>
-          <p class="myp">{{task}}</p>
+          <pre class="myp">{{task}}</pre>
         </div>
         <div class="mydiv">
           <div v-for="(item, index) in items">

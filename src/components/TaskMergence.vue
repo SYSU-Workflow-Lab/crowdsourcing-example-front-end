@@ -6,11 +6,11 @@
       <el-main>
         <div class="mydiv">
           <h2>Tips: </h2>
-          <p class="myp">{{tips}}</p>
+          <pre class="myp">{{tips}}</pre>
         </div>
         <div class="mydiv">
           <h2>Task: </h2>
-          <p class="myp">{{task}}</p>
+          <pre class="myp">{{task}}</pre>
         </div>
         <div v-if="isComplex" class="mydiv">
           <h2 style="font-weight:bold;font-size:30px">Tasks</h2>
