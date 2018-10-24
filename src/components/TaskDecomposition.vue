@@ -12,14 +12,16 @@
           <h2>Task: </h2>
           <pre class="myp">{{task}}</pre>
         </div>
-        <div class="mydiv">
+        <div class="mydiv" style="padding-top:20px">
           <div v-for="(item, index) in items">
-            <h2>Subtask {{index+1}}: </h2>
+            <div style="height:40px;margin-bottom:0px;text-align:start;margin-left:5%;">
+              <span style="font-size:26px">Subtask {{index+1}}: </span>
+              <span >
+                <el-button type="danger" icon="el-icon-delete" style="float: right; margin-right:5%;" @click="deleteTask(index)"></el-button>
+              </span>
+            </div>
             <p>
               <el-input class="myinput" type="textarea" v-model="item.data" :rows="2"></el-input>
-            </p>
-            <p style="height:40px;">
-              <el-button type="danger" icon="el-icon-delete" circle style="float: right; margin-right:5%" @click="deleteTask(index)"></el-button>
             </p>
           </div>
           <div style="margin-top:30px;">
@@ -34,7 +36,6 @@
 
 <script>
 import axios from 'axios';
-const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'TaskDecomposition',
   data () {
@@ -84,7 +85,7 @@ export default {
               userId: workId,
               data: this.items
             }
-            axios.post('http://' + HOST_NAME + '/api/task-decomposition/submit', formData)
+            axios.post('/api/task-decomposition/submit', formData)
             .then(response => {
               this.items = [{
                 data:''
@@ -133,7 +134,7 @@ export default {
       }
   },
   created: function() {
-    axios.get('http://' + HOST_NAME + '/api/task-decomposition/tips-and-task')
+    axios.get('/api/task-decomposition/tips-and-task')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];

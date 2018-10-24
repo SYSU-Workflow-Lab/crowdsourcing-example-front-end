@@ -32,7 +32,7 @@
             <h2 style="font-weight:bold;font-size:30px">
               Best Task Decomposition:(Total participants: {{counts[0]}})
             </h2>
-            <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{subTask['userId']}}</h3>
+            <!-- <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{subTask['userId']}}</h3> -->
             <div v-for="(i, subindex) in subTask['data']">
               <hr style="width:90%">
               <h2>SubTask {{subindex+1}}: </h2>
@@ -48,7 +48,7 @@
             <div v-for="(i, subindex) in completedTask">
               <hr style="width:90%">
               <h2>SubTask {{subindex+1}}: </h2>
-              <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{i['userId']}}</h3>
+              <!-- <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{i['userId']}}</h3> -->
               <p>
                 <pre class="myoutput">{{i['data'][0]}}</pre>
               </p>
@@ -58,7 +58,7 @@
             <h2 style="font-weight:bold;font-size:30px">
               Best Task Mergence:(Total participants: {{counts[2]}})
             </h2>
-            <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{mergedTask['userId']}}</h3>
+            <!-- <h3 style="text-align:start;width:90%;margin: 0 auto;">Worker ID: {{mergedTask['userId']}}</h3> -->
             <hr style="width:90%">
               <p>
                 <pre class="myoutput">{{mergedTask['data'][0]}}</pre>
@@ -73,7 +73,6 @@
 <script>
 import axios from 'axios';
 import {getCookie, setCookie} from '../util/cookieUtils';
-const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'Vote',
   data () {
@@ -125,7 +124,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(({ value }) => {
-        axios.get(`http://${HOST_NAME}/api/management/reset`)
+        axios.get('/api/management/reset')
           .then(response => {
             this.task = 'No Data';
             this.subTask = {
@@ -157,7 +156,7 @@ export default {
         });
     },
     getData() {
-      axios.get('http://' + HOST_NAME + '/api/management/data')
+      axios.get('/api/management/data')
       .then(response => {
         this.task = response.data['task'][0]['data'][0];
         this.subTask = response.data['subtask'][0];
@@ -172,7 +171,7 @@ export default {
         });
       });
 
-      axios.get('http://' + HOST_NAME + '/api/management/counts')
+      axios.get('/api/management/counts')
       .then(response => {
         this.counts = response.data;
       })
@@ -198,7 +197,7 @@ export default {
               type: this.selectedOptions[1],
               content: this.updateInput,
             }
-          axios.post('http://' + HOST_NAME + '/api/management/update/tips-and-tasks', formData)
+          axios.post('/api/management/update/tips-and-tasks', formData)
             .then(response => {
               this.$message({
                 type: 'success',
@@ -233,7 +232,7 @@ export default {
       }
     },
     updateTipsAndTasksData() { // 更新Tips和Tasks数据
-      axios.get('http://' + HOST_NAME + '/api/management/tips-and-tasks')
+      axios.get('/api/management/tips-and-tasks')
       .then(response => {
         this.tipsAndTasks = []
         for (var i = 0; i < response.data.length; i += 2) {

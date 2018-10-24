@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import TaskDecomposition from '@/components/TaskDecomposition'
 import TaskCompletion from '@/components/TaskCompletion'
 import TaskMergence from '@/components/TaskMergence'
@@ -7,9 +7,9 @@ import Vote from '@/components/Vote'
 import Management from '@/components/Management'
 import Error from '@/components/Error'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
   routes: [
     {
       path: '/task-decomposition',

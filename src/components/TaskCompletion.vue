@@ -71,7 +71,7 @@ export default {
                 index: this.$route.params.index,
               }
             }
-            axios.post('http://' + HOST_NAME + '/api/task-completion/submit', formData)
+            axios.post('/api/task-completion/submit', formData)
             .then(response => {
               this.solution = '';
               localStorage.removeItem('solution');
@@ -108,7 +108,7 @@ export default {
       }
   },
   created: function() {
-    axios.get('http://' + HOST_NAME + '/api/task-completion/tips-and-task/' + this.$route.params.index)
+    axios.get('/api/task-completion/tips-and-task/' + this.$route.params.index)
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];

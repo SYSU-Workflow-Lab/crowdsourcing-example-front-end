@@ -1,7 +1,7 @@
 <template>
   <el-container>
       <el-header style="height:80px;padding:0px">
-        <h1>Vote The Best {{$route.params.purpose}}</h1>
+        <h1>{{title}}</h1>
       </el-header>
       <el-main>
         <div class="mydiv">
@@ -38,11 +38,11 @@
 
 <script>
 import axios from 'axios';
-const HOST_NAME = process.env.HOST_NAME;
 export default {
   name: 'Vote',
   data () {
     return {
+      title: '',
       stage: '',
       tips: '',
       task: '',
@@ -71,7 +71,7 @@ export default {
               userId: workId,
               data: this.result
             }
-            axios.post('http://' + HOST_NAME + '/api/vote/submit/' + this.stage + '/' + this.index, formData)
+            axios.post('/api/vote/submit/' + this.stage + '/' + this.index, formData)
             .then(response => {
               // this.finished = true;
               this.$message({
@@ -99,8 +99,10 @@ export default {
       }
   },
   created: function() {
+    this.title = 'Vote The Best ' + this.$route.params.purpose;
     switch (this.$route.params.purpose) {
       case 'Task':
+        this.title = 'Judge The Task';
         this.stage = 'vt';
         this.isMulti = false;
         this.index = 0;
@@ -125,11 +127,11 @@ export default {
         this.isVT = false;
         break;
     }
-    axios.get('http://' + HOST_NAME + '/api/vote/' + this.stage + '/tips-and-task')
+    axios.get('/api/vote/' + this.stage + '/tips-and-task')
     .then(response => {
       this.tips = response.data[0];
       this.task = response.data[1];
-      axios.get('http://' + HOST_NAME + '/api/vote/' + this.stage + '/data/' + this.index)
+      axios.get('/api/vote/' + this.stage + '/data/' + this.index)
         .then(response => {
           this.items = response.data;
         })
