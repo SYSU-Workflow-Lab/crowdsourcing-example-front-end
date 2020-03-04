@@ -109,6 +109,7 @@ export default {
         this.isVT = true;
         break;
       case 'Subtask':
+        this.title = 'Vote The Best Decomposition Scheme';
         this.stage = 'vtd';
         this.isMulti = true;
         this.index = '0';
